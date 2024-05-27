@@ -1,0 +1,20 @@
+{
+  "window_width": 800,
+  "window_height": 200,
+  "background_color": "grey",
+  "icons_size_px": 60,
+  "buttons": {
+    "01": {
+      "py_path": "D:/_DEV/Python/QTea_Media_Player/main.py",
+      "icon_path": "D:/_DEV/Python/QTea_Media_Player/skins/default/queue_blue.png"
+    },
+    "02": {
+      "py_path": "D:/_DEV/Python/QTea_Media_Player/main.py",
+      "icon_path": "D:/_DEV/Python/QTea_Media_Player/skins/default/queue_blue.png"
+    },
+    "03": {
+      "py_path": "D:/_DEV/Python/QTea_Media_Player/main.py",
+      "icon_path": "D:/_DEV/Python/QTea_Media_Player/skins/default/queue_blue.png"
+    }
+  }
+}

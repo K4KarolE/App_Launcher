@@ -2,8 +2,8 @@
 import pygame
 from pathlib import Path
 from json import load, dump
-import sys
 import os
+import subprocess
 
 
 
@@ -17,16 +17,17 @@ def save_json(json_dic, path_json):
         dump(json_dic, f, indent=2)
     return
 
+
+# LOAD DB
 WORKING_DIRECTORY = Path().resolve()
 PATH_JSON_DB = Path(WORKING_DIRECTORY, 'database.json')
 DB = open_json(PATH_JSON_DB)
 
-
-# LOAD DB
 background_color = DB['background_color']
 window_width = DB['window_width']
 window_height = DB['window_height']
-icons_size_px = DB['icons_size_px']
+button_size_px = DB['button_size_px']
+button_clicked_bd_color = DB['button_clicked_bd_color']
 
 
 
@@ -35,56 +36,102 @@ icons_size_px = DB['icons_size_px']
 pygame.init()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((window_width, window_height), pygame.RESIZABLE)
-pygame.display.set_caption('Py App Launcher')
+pygame.display.set_caption('App Launcher')
+screen.fill(background_color)
+
+
+''' WINDOW ICON '''
+window_icon_path = Path(WORKING_DIRECTORY, 'docs/icons/window_icon.png')
+window_icon = pygame.image.load(window_icon_path)
+pygame.display.set_icon(window_icon)
 
 
 buttons_dic = {}
-def generate_button(number, icons_size_px, x_coord, y_coord):
+for button_number in DB['buttons']:
+    buttons_dic[button_number] = {}
+    buttons_dic[button_number]['clicked'] = False
+
+
+def generate_button(number, button_size_px, x_coord, y_coord):
     icon_path = Path(DB['buttons'][number]['icon_path'])
-    buttons_dic[number] = {}
     buttons_dic[number]['image'] = pygame.image.load(icon_path).convert_alpha()
-    buttons_dic[number]['image'] = pygame.transform.scale(buttons_dic[number]['image'], (icons_size_px, icons_size_px))
+    buttons_dic[number]['image'] = pygame.transform.scale(buttons_dic[number]['image'], (button_size_px, button_size_px))
     buttons_dic[number]['rect'] = buttons_dic[number]['image'].get_rect()
-    buttons_dic[number]['rect'].center = x_coord + int(icons_size_px/2), y_coord + int(icons_size_px/2)
+    buttons_dic[number]['rect'].center = x_coord + int(button_size_px/2), y_coord + int(button_size_px/2)
+    buttons_dic[number]['pos_x'] = x_coord
+    buttons_dic[number]['pos_y'] = y_coord
     return buttons_dic[number]['image'], buttons_dic[number]['rect']
     
-
-
-buttons_counter = 0
-BUTTONS_POS_Y = 20
-BUTTONS_POS_X_BASE = 20
-BUTTONS_POS_X_GAP = 30
-for button_number in DB['buttons']:
-    buttons_pos_x = BUTTONS_POS_X_BASE + buttons_counter * (icons_size_px + BUTTONS_POS_X_GAP)
-    image, image_rect = generate_button(button_number, icons_size_px, buttons_pos_x, BUTTONS_POS_Y)
-    screen.blit(image, (buttons_pos_x, BUTTONS_POS_Y))
-    buttons_counter += 1
-
 
 
 ''' -- LOOP -- '''
 run = True
 while run:
+    screen.fill(background_color)
+    current_window_width, current_window_height = pygame.display.get_surface().get_size()
     cursor_coord_x, cursor_coord_y = pygame.mouse.get_pos()
-    # print(cursor_coord_x, cursor_coord_y)
+    # print(cursor_coord_x, cursor_coord_y) # to test
+
+
+    # BUTTONS DISPLAY
+    buttons_counter = 0
+    BUTTONS_POS_Y = 20
+    BUTTONS_POS_X_BASE = 20
+    BUTTONS_POS_X_GAP = 30
+    BUTTONS_CLICKED_GAP = 0
+    for button_number in DB['buttons']:
+        buttons_pos_x = BUTTONS_POS_X_BASE + buttons_counter * (button_size_px + BUTTONS_POS_X_GAP)
+        
+        # DISPLAY THE ICON IN A NEW ROW IF NECESSARY
+        if buttons_pos_x >= current_window_width - button_size_px:
+            buttons_counter = 0
+            buttons_pos_x = BUTTONS_POS_X_BASE + buttons_counter * (button_size_px + BUTTONS_POS_X_GAP)
+            BUTTONS_POS_Y += button_size_px + BUTTONS_POS_X_GAP
+        
+        # CLICKED BUTTON ANIMATION
+        if buttons_dic[button_number]['clicked']:
+            BUTTONS_CLICKED_GAP = 3
+            buttons_dic[button_number]['rect'].move_ip(BUTTONS_CLICKED_GAP, BUTTONS_CLICKED_GAP)
+            pygame.draw.rect(screen, button_clicked_bd_color, buttons_dic[button_number]['rect'])
+            
+        # DISPLAY BUTTONS
+        image = generate_button(button_number, button_size_px, buttons_pos_x, BUTTONS_POS_Y)[0]
+        screen.blit(image, (buttons_pos_x + BUTTONS_CLICKED_GAP, BUTTONS_POS_Y + BUTTONS_CLICKED_GAP))
+        buttons_counter += 1
+        BUTTONS_CLICKED_GAP = 0
+
+
     
     for event in pygame.event.get():
 
             # MOUSEBUTTONDOWN
             if event.type == pygame.MOUSEBUTTONDOWN:
-
-                # Click on the icons
+                # TO TEST RECT COMPARED TO THE IMAGE LOCATION 
+                # pygame.draw.rect(screen, 'red', buttons_dic[number]['rect'])
                 for number in buttons_dic:
-                    # TO TEST RECT COMPARED TO THE IMAGE LOCATION 
-                    # pygame.draw.rect(screen, 'red', buttons_dic[number]['rect'])
-                    
                     if buttons_dic[number]['rect'].collidepoint(cursor_coord_x, cursor_coord_y):
-                        print(cursor_coord_x, cursor_coord_y)
-
+                        buttons_dic[number]['clicked'] = True
+                        
     
+            # MOUSEBUTTONUP - APP LAUNCH 
+            elif event.type == pygame.MOUSEBUTTONUP:
+                for number in buttons_dic:
+                    if buttons_dic[number]['clicked']:
+                        app_launcher = DB['buttons'][number]['app_launcher']
+                        app_path = DB['buttons'][number]['app_path']
+                        app_dir = os.path.dirname(app_path)
+                        os.chdir(app_dir)
+                        if 'py' in app_launcher:
+                            subprocess.Popen(f'{app_launcher} "{app_path}"')
+                        else:
+                            os.startfile(app_path)
+                    buttons_dic[number]['clicked'] = False
+
+
             # QUIT
             elif event.type == pygame.QUIT: 
                 run = False
+    
     
     pygame.display.update()
     clock.tick(60)

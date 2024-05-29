@@ -1,7 +1,7 @@
 
 import pygame
 from pathlib import Path
-from json import load, dump
+from json import load
 import os
 import subprocess
 
@@ -12,15 +12,11 @@ def open_json(path_json):
         json_dic = load(f)
     return json_dic
 
-def save_json(json_dic, path_json):
-    with open(path_json, 'w') as f:
-        dump(json_dic, f, indent=2)
-    return
-
 
 # LOAD DB
 WORKING_DIRECTORY = Path().resolve()
 PATH_JSON_DB = Path(WORKING_DIRECTORY, 'database.json')
+PATH_WINDOW_SETTINGS = Path(WORKING_DIRECTORY, 'window_settings.py')
 DB = open_json(PATH_JSON_DB)
 
 background_color = DB['background_color']
@@ -61,11 +57,21 @@ def generate_button(number, button_size_px, x_coord, y_coord):
     buttons_dic[number]['pos_x'] = x_coord
     buttons_dic[number]['pos_y'] = y_coord
     return buttons_dic[number]['image'], buttons_dic[number]['rect']
+
+
+SETTINGS_IMG_PATH = Path(WORKING_DIRECTORY, 'docs/icons/settings.png')
+def generate_settings_button(size_px, x_coord, y_coord):
+    img = pygame.image.load(SETTINGS_IMG_PATH).convert_alpha()
+    img = pygame.transform.scale(img, (size_px, size_px))
+    img_rect = img.get_rect()
+    img_rect.center = x_coord + int(size_px/2), y_coord + int(size_px/2)
+    return img, img_rect
     
 
 
 ''' -- LOOP -- '''
 run = True
+settings_button_clicked = False
 while run:
     screen.fill(background_color)
     current_window_width, current_window_height = pygame.display.get_surface().get_size()
@@ -73,7 +79,7 @@ while run:
     # print(cursor_coord_x, cursor_coord_y) # to test
 
 
-    # BUTTONS DISPLAY
+    ''' BUTTONS / ICONS '''
     buttons_counter = 0
     BUTTONS_POS_Y = 20
     BUTTONS_POS_X_BASE = 20
@@ -101,7 +107,21 @@ while run:
         BUTTONS_CLICKED_GAP = 0
 
 
+    ''' SETTINGS BUTTON '''
+    GAP_FROM_RB_CORNER = 30
+    sett_button_pos = (current_window_width - GAP_FROM_RB_CORNER, current_window_height - GAP_FROM_RB_CORNER)
     
+    if settings_button_clicked:
+        sett_button_clicked_gap = 3
+        sett_button_pos = (current_window_width - GAP_FROM_RB_CORNER + sett_button_clicked_gap, current_window_height - GAP_FROM_RB_CORNER + sett_button_clicked_gap)
+        pygame.draw.rect(screen, button_clicked_bd_color, settings_button_rect)
+    
+    settings_button, settings_button_rect = generate_settings_button(20, sett_button_pos[0], sett_button_pos[1])
+    screen.blit(settings_button, sett_button_pos)
+
+    
+
+    ''' EVENT HANDLING '''
     for event in pygame.event.get():
 
             # MOUSEBUTTONDOWN
@@ -111,6 +131,9 @@ while run:
                 for number in buttons_dic:
                     if buttons_dic[number]['rect'].collidepoint(cursor_coord_x, cursor_coord_y):
                         buttons_dic[number]['clicked'] = True
+                
+                if settings_button_rect.collidepoint(cursor_coord_x, cursor_coord_y):
+                    settings_button_clicked = True
                         
     
             # MOUSEBUTTONUP - APP LAUNCH 
@@ -121,11 +144,18 @@ while run:
                         app_path = DB['buttons'][number]['app_path']
                         app_dir = os.path.dirname(app_path)
                         os.chdir(app_dir)
+                        
                         if 'py' in app_launcher:
                             subprocess.Popen(f'{app_launcher} "{app_path}"')
                         else:
                             os.startfile(app_path)
+                        
+                        os.chdir(WORKING_DIRECTORY)
                     buttons_dic[number]['clicked'] = False
+                
+                if settings_button_rect.collidepoint(cursor_coord_x, cursor_coord_y):
+                    settings_button_clicked = False
+                    subprocess.Popen(f'py "{PATH_WINDOW_SETTINGS}"')
 
 
             # QUIT

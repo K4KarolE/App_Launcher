@@ -35,15 +35,21 @@ for button_number in DB['buttons']:
     buttons_dic[button_number]['clicked'] = False
 
 
-def generate_button(number, button_size_px, x_coord, y_coord):
+def generate_button(number):
     icon_path = Path(DB['buttons'][number]['icon_path'])
     buttons_dic[number]['image'] = pygame.image.load(icon_path).convert_alpha()
-    buttons_dic[number]['image'] = pygame.transform.scale(buttons_dic[number]['image'], (button_size_px, button_size_px))
+    buttons_dic[number]['image'] = pygame.transform.scale(buttons_dic[number]['image'], (cv.button_size_px, cv.button_size_px))
     buttons_dic[number]['rect'] = buttons_dic[number]['image'].get_rect()
-    buttons_dic[number]['rect'].center = x_coord + int(button_size_px/2), y_coord + int(button_size_px/2)
-    buttons_dic[number]['pos_x'] = x_coord
-    buttons_dic[number]['pos_y'] = y_coord
+    buttons_dic[number]['rect'].center = buttons_pos_x + int(cv.button_size_px/2), buttons_pos_y + int(cv.button_size_px/2)
+    buttons_dic[number]['pos_x'] = buttons_pos_x
+    buttons_dic[number]['pos_y'] = buttons_pos_y
+    buttons_dic[number]['not_empty'] = True
     return buttons_dic[number]['image'], buttons_dic[number]['rect']
+
+def generate_empty_button(number):
+    buttons_dic[number]['rect'] = pygame.draw.rect(screen, cv.background_color, (buttons_pos_x, buttons_pos_y, cv.button_size_px, cv.button_size_px))
+    buttons_dic[number]['not_empty'] = False
+
 
 
 SETTINGS_IMG_PATH = Path(WORKING_DIRECTORY, 'docs/icons/settings.png')
@@ -68,9 +74,9 @@ while run:
 
     ''' BUTTONS / ICONS '''
     buttons_counter = 0
-    BUTTONS_POS_Y = 20
+    buttons_pos_y = 20
     BUTTONS_POS_X_BASE = 20
-    BUTTONS_POS_X_GAP = 30
+    BUTTONS_POS_X_GAP = 10
     BUTTONS_CLICKED_GAP = 0
     for button_number in DB['buttons']:
         buttons_pos_x = BUTTONS_POS_X_BASE + buttons_counter * (cv.button_size_px + BUTTONS_POS_X_GAP)
@@ -79,17 +85,24 @@ while run:
         if buttons_pos_x >= current_window_width - cv.button_size_px:
             buttons_counter = 0
             buttons_pos_x = BUTTONS_POS_X_BASE + buttons_counter * (cv.button_size_px + BUTTONS_POS_X_GAP)
-            BUTTONS_POS_Y += cv.button_size_px + BUTTONS_POS_X_GAP
+            buttons_pos_y += cv.button_size_px + BUTTONS_POS_X_GAP
         
         # CLICKED BUTTON ANIMATION
-        if buttons_dic[button_number]['clicked']:
+        if (buttons_dic[button_number]['clicked'] and
+            buttons_dic[button_number]['not_empty'] and
+            not DB['window_settings_active']):
+            
             BUTTONS_CLICKED_GAP = 3
             buttons_dic[button_number]['rect'].move_ip(BUTTONS_CLICKED_GAP, BUTTONS_CLICKED_GAP)
             pygame.draw.rect(screen, cv.button_clicked_bd_color, buttons_dic[button_number]['rect'])
             
         # DISPLAY BUTTONS
-        image = generate_button(button_number, cv.button_size_px, buttons_pos_x, BUTTONS_POS_Y)[0]
-        screen.blit(image, (buttons_pos_x + BUTTONS_CLICKED_GAP, BUTTONS_POS_Y + BUTTONS_CLICKED_GAP))
+        if DB['buttons'][button_number]['app_path']:
+            image = generate_button(button_number)[0]
+            screen.blit(image, (buttons_pos_x + BUTTONS_CLICKED_GAP, buttons_pos_y + BUTTONS_CLICKED_GAP))
+        else:
+            generate_empty_button(button_number)
+            
         buttons_counter += 1
         BUTTONS_CLICKED_GAP = 0
 
@@ -119,6 +132,7 @@ while run:
                     if buttons_dic[number]['rect'].collidepoint(cursor_coord_x, cursor_coord_y):
                         buttons_dic[number]['clicked'] = True
                 
+                # SETTINGS BUTTON CLICKED
                 if settings_button_rect.collidepoint(cursor_coord_x, cursor_coord_y):
                     settings_button_clicked = True
                         
@@ -126,7 +140,10 @@ while run:
             # MOUSEBUTTONUP - APP LAUNCH 
             elif event.type == pygame.MOUSEBUTTONUP:
                 for number in buttons_dic:
-                    if buttons_dic[number]['clicked'] and not DB['window_settings_active']:
+                    if (buttons_dic[number]['clicked'] and
+                        not DB['window_settings_active'] and
+                        buttons_dic[number]['not_empty']):
+
                         app_launcher = DB['buttons'][number]['app_launcher']
                         app_path = DB['buttons'][number]['app_path']
                         app_dir = os.path.dirname(app_path)

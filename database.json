@@ -8,7 +8,7 @@
   "button_clicked_bd_color": "light grey",
   "button_size_px": 48,
   "window_settings": {
-    "py_launcher_window_settings": "py",
+    "py_launcher_window_settings": "pyw",
     "py_launcher_list": {
       "py": "",
       "pyw": "",
@@ -17,32 +17,42 @@
     }
   },
   "buttons": {
-    "01": {
+    "1": {
+      "app_path": "",
+      "app_launcher": "",
+      "icon_path": ""
+    },
+    "2": {
       "app_path": "D:/_DEV/Python/Video_Downloader/main.py",
       "app_launcher": "pyw",
       "icon_path": "D:/_DEV/Python/QTea_Media_Player/skins/default/queue_blue.png"
     },
-    "02": {
+    "3": {
+      "app_path": "",
+      "app_launcher": "",
+      "icon_path": ""
+    },
+    "4": {
       "app_path": "D:/_DEV/Python/Motion_In_Time/main_pyqt.py",
       "app_launcher": "py",
       "icon_path": "D:/_DEV/Python/QTea_Media_Player/skins/default/queue_blue.png"
     },
-    "03": {
+    "5": {
       "app_path": "D:/_DEV/DEV_D.xlsx",
       "app_launcher": "excel",
       "icon_path": "D:/_DEV/Python/QTea_Media_Player/skins/default/queue_blue.png"
     },
-    "04": {
+    "6": {
       "app_path": "D:/Pikk Pakk/Movies_New_Record.xlsx",
       "app_launcher": "excel",
       "icon_path": "D:/_DEV/Python/QTea_Media_Player/skins/default/queue_blue.png"
     },
-    "05": {
+    "7": {
       "app_path": "C:/Program Files/Affinity/Photo/Photo.exe",
       "app_launcher": "exe",
       "icon_path": "D:/_DEV/Python/QTea_Media_Player/skins/default/queue_blue.png"
     },
-    "06": {
+    "8": {
       "app_path": "D:/_DEV/Python/QTea_Media_Player/main.py",
       "app_launcher": "py",
       "icon_path": "D:/_DEV/Python/QTea_Media_Player/skins/default/queue_blue.png"

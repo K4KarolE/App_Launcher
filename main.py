@@ -3,6 +3,7 @@ import pygame
 from pathlib import Path
 import os
 import subprocess
+import sys
 
 from src import (
     cv,
@@ -52,10 +53,13 @@ def generate_empty_button(number):
 
 
 
-SETTINGS_IMG_PATH = Path(WORKING_DIRECTORY, 'docs/icons/settings.png')
-def generate_settings_button(size_px, x_coord, y_coord):
-    img = pygame.image.load(SETTINGS_IMG_PATH).convert_alpha()
+SETTINGS_WINDOW_IMG_PATH = Path(WORKING_DIRECTORY, 'docs/icons/settings_window_img.png')
+SETTINGS_MAIN_IMG_PATH = Path(WORKING_DIRECTORY, 'docs/icons/settings_main_img.png')
+
+def generate_settings_button(opacity, size_px, x_coord, y_coord, image_path):
+    img = pygame.image.load(image_path).convert_alpha()
     img = pygame.transform.scale(img, (size_px, size_px))
+    img.set_alpha(opacity)
     img_rect = img.get_rect()
     img_rect.center = x_coord + int(size_px/2), y_coord + int(size_px/2)
     return img, img_rect
@@ -64,7 +68,11 @@ def generate_settings_button(size_px, x_coord, y_coord):
 
 ''' -- LOOP -- '''
 run = True
-settings_button_clicked = False
+settings_wind_button_clicked = False
+settings_main_button_clicked = False
+settings_main_button_clicked_counter = 1
+sett_main_button_opacity = 50
+settings_main_active = False
 while run:
     screen.fill(cv.background_color)
     current_window_width, current_window_height = pygame.display.get_surface().get_size()
@@ -90,7 +98,7 @@ while run:
         # CLICKED BUTTON ANIMATION
         if (buttons_dic[button_number]['clicked'] and
             buttons_dic[button_number]['not_empty'] and
-            not DB['window_settings_active']):
+            not settings_main_active):
             
             BUTTONS_CLICKED_GAP = 3
             buttons_dic[button_number]['rect'].move_ip(BUTTONS_CLICKED_GAP, BUTTONS_CLICKED_GAP)
@@ -109,15 +117,27 @@ while run:
 
     ''' SETTINGS BUTTON '''
     GAP_FROM_RB_CORNER = 30
-    sett_button_pos = (current_window_width - GAP_FROM_RB_CORNER, current_window_height - GAP_FROM_RB_CORNER)
+    SETTING_BUTTONS_GAP = 30
+    sett_wind_button_pos = (current_window_width - GAP_FROM_RB_CORNER, current_window_height - GAP_FROM_RB_CORNER)
+    sett_main_button_pos = (current_window_width - GAP_FROM_RB_CORNER - SETTING_BUTTONS_GAP, current_window_height - GAP_FROM_RB_CORNER)
     
-    if settings_button_clicked:
+    # SETTINGS WINDOW
+    if settings_wind_button_clicked:
         sett_button_clicked_gap = 3
-        sett_button_pos = (current_window_width - GAP_FROM_RB_CORNER + sett_button_clicked_gap, current_window_height - GAP_FROM_RB_CORNER + sett_button_clicked_gap)
-        pygame.draw.rect(screen, cv.button_clicked_bd_color, settings_button_rect)
+        sett_wind_button_pos = (sett_wind_button_pos[0] + sett_button_clicked_gap, sett_wind_button_pos[1] + sett_button_clicked_gap)
+        pygame.draw.rect(screen, cv.button_clicked_bd_color, settings_wind_button_rect)
     
-    settings_button, settings_button_rect = generate_settings_button(20, sett_button_pos[0], sett_button_pos[1])
-    screen.blit(settings_button, sett_button_pos)
+    settings_wind_button, settings_wind_button_rect = generate_settings_button(100, 20, sett_wind_button_pos[0], sett_wind_button_pos[1], SETTINGS_WINDOW_IMG_PATH)
+    screen.blit(settings_wind_button, sett_wind_button_pos)
+
+    # SETTINGS MAIN
+    if settings_main_button_clicked:
+        sett_button_clicked_gap = 3
+        sett_main_button_pos = (sett_main_button_pos[0] + sett_button_clicked_gap, sett_main_button_pos[1] + sett_button_clicked_gap)
+        pygame.draw.rect(screen, cv.button_clicked_bd_color, settings_main_button_rect)
+   
+    settings_main_button, settings_main_button_rect = generate_settings_button(sett_main_button_opacity, 20, sett_main_button_pos[0], sett_main_button_pos[1], SETTINGS_MAIN_IMG_PATH)
+    screen.blit(settings_main_button, sett_main_button_pos)
 
     
 
@@ -133,16 +153,17 @@ while run:
                         buttons_dic[number]['clicked'] = True
                 
                 # SETTINGS BUTTON CLICKED
-                if settings_button_rect.collidepoint(cursor_coord_x, cursor_coord_y):
-                    settings_button_clicked = True
+                if settings_wind_button_rect.collidepoint(cursor_coord_x, cursor_coord_y):
+                    settings_wind_button_clicked = True
+                
+                elif settings_main_button_rect.collidepoint(cursor_coord_x, cursor_coord_y):
+                    settings_main_button_clicked = True
                         
     
             # MOUSEBUTTONUP - APP LAUNCH 
             elif event.type == pygame.MOUSEBUTTONUP:
                 for number in buttons_dic:
-                    if (buttons_dic[number]['clicked'] and
-                        not DB['window_settings_active'] and
-                        buttons_dic[number]['not_empty']):
+                    if buttons_dic[number]['clicked'] and buttons_dic[number]['not_empty'] and not settings_main_active:
 
                         app_launcher = DB['buttons'][number]['app_launcher']
                         app_path = DB['buttons'][number]['app_path']
@@ -157,15 +178,24 @@ while run:
                         os.chdir(WORKING_DIRECTORY)
                     buttons_dic[number]['clicked'] = False
                 
-                if settings_button_rect.collidepoint(cursor_coord_x, cursor_coord_y):
-                    settings_button_clicked = False
+                # SETTINGS BUTTONS - UNCLICKED
+                if settings_wind_button_rect.collidepoint(cursor_coord_x, cursor_coord_y):
+                    settings_wind_button_clicked = False
                     subprocess.Popen(f'{cv.py_launcher_settings_window} "{PATH_WINDOW_SETTINGS}"')
-
-                    DB['window_settings_active'] = True
-                    save_json()
+                    sys.exit()
+                
+                elif settings_main_button_rect.collidepoint(cursor_coord_x, cursor_coord_y):
+                    settings_main_button_clicked = False
+                    
+                    if settings_main_active:
+                        settings_main_active = False
+                        sett_main_button_opacity = 50
+                    else:
+                        settings_main_active = True
+                        sett_main_button_opacity = 100
 
             # QUIT
-            elif event.type == pygame.QUIT: 
+            elif event.type == pygame.QUIT:
                 run = False
     
     

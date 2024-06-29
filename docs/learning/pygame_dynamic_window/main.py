@@ -1,3 +1,26 @@
+'''
+At the early stage I was thinking using a PyGame and a Tkinter
+window to support the app launching window dynamic nature, 
+resizing the window -> the buttons automatically repositioning 
+to a new row, if necessary (PyGame),
+and settings window`s user input / add-remove-reorder
+buttons capability (Tkinter)
+
+Working:
+- Clicking on the buttons launching the relevant python, excel, exe,.. app
+- From JSON:
+    "app_launcher": "py" -> python app launching with terminal
+    "app_launcher": "pyw" -> python app launching without terminal
+- Resizing the main window -> the button automatically repositioning
+to a new row if necessary 
+- 1st settings button: while it is active, the buttons app
+launching functions are disabled
+- 2nd settings button: launching the settings window
+closing the main window
+
+Saving for later
+'''
+
 
 import pygame
 from pathlib import Path
@@ -9,11 +32,8 @@ from src import (
     cv,
     WORKING_DIRECTORY,
     PATH_WINDOW_SETTINGS,
-    DB,
-    save_json
+    DB
 )
-
-
 
 
 ''' -- PYGAME -- '''

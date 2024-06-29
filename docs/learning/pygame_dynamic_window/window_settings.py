@@ -1,12 +1,7 @@
 from pathlib import Path
 from tkinter import *
 
-from src import (
-    cv,
-    save_json,
-    WORKING_DIRECTORY,
-    DB
-)
+from src import cv, WORKING_DIRECTORY
 
 
 # WINDOW
@@ -22,11 +17,8 @@ path_icon = Path(WORKING_DIRECTORY, 'docs/icons/window_settings_icon.ico')
 window.iconbitmap(path_icon)
 
 
-
-
-
 window.mainloop()
 
 # AFTER CLOSING THE SETTINGS WINDOW
-DB['window_settings_active'] = False
-save_json()
+# DB['window_settings_active'] = False
+# save_json()

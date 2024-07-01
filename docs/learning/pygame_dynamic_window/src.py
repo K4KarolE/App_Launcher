@@ -14,7 +14,7 @@ def save_json():
 
 
 WORKING_DIRECTORY = Path().resolve()
-PATH_JSON_DB = Path(WORKING_DIRECTORY, 'database.json')
+PATH_JSON_DB = Path(WORKING_DIRECTORY, 'settings.json')
 PATH_WINDOW_SETTINGS = Path(Path(__file__).parent, 'window_settings.py')
 DB = open_json()
 

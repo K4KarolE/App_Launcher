@@ -1,12 +1,15 @@
 {
-  "window_main_width": 800,
+  "window_main_always_on_top": true,
+  "window_main_width": 500,
   "window_main_height": 200,
+  "window_main_min_width": 150,
   "window_settings_width": 600,
   "window_settings_height": 400,
   "window_settings_active": false,
   "background_color": "#DEDEDE",
   "button_clicked_bd_color": "light grey",
   "button_size_px": 48,
+  "button_pos_gap": 10,
   "window_settings": {
     "py_launcher_window_settings": "pyw",
     "py_launcher_list": {
@@ -17,42 +20,50 @@
     }
   },
   "buttons": {
-    "1": {
+    "0": {
+      "title": "",
       "app_path": "",
       "app_launcher": "",
       "icon_path": ""
     },
-    "2": {
+    "1": {
+      "title": "T",
       "app_path": "D:/_DEV/Python/Video_Downloader/main.py",
       "app_launcher": "pyw",
       "icon_path": "D:/_DEV/Python/QTea_Media_Player/skins/default/queue_blue.png"
     },
-    "3": {
+    "2": {
+      "title": "",
       "app_path": "",
       "app_launcher": "",
       "icon_path": ""
     },
-    "4": {
+    "3": {
+      "title": "T",
       "app_path": "D:/_DEV/Python/Motion_In_Time/main_pyqt.py",
       "app_launcher": "py",
       "icon_path": "D:/_DEV/Python/QTea_Media_Player/skins/default/queue_blue.png"
     },
-    "5": {
+    "4": {
+      "title": "T",
       "app_path": "D:/_DEV/DEV_D.xlsx",
       "app_launcher": "excel",
       "icon_path": "D:/_DEV/Python/QTea_Media_Player/skins/default/queue_blue.png"
     },
-    "6": {
+    "5": {
+      "title": "T",
       "app_path": "D:/Pikk Pakk/Movies_New_Record.xlsx",
       "app_launcher": "excel",
       "icon_path": "D:/_DEV/Python/QTea_Media_Player/skins/default/queue_blue.png"
     },
-    "7": {
+    "6": {
+      "title": "T",
       "app_path": "C:/Program Files/Affinity/Photo/Photo.exe",
       "app_launcher": "exe",
       "icon_path": "D:/_DEV/Python/QTea_Media_Player/skins/default/queue_blue.png"
     },
-    "8": {
+    "7": {
+      "title": "T",
       "app_path": "D:/_DEV/Python/QTea_Media_Player/main.py",
       "app_launcher": "py",
       "icon_path": "D:/_DEV/Python/QTea_Media_Player/skins/default/queue_blue.png"

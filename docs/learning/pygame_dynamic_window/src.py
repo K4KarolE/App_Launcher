@@ -20,7 +20,7 @@ DB = open_json()
 
 @dataclass
 class Data:
-    background_color = DB['background_color']
+    background_color = DB['bg_color']
 
     window_main_width = DB['window_main_width']
     window_main_height = DB['window_main_height']

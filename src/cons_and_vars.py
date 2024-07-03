@@ -22,20 +22,25 @@ settings = open_json(PATH_JSON_SETTINGS)
 @dataclass
 class Data:
 
-    background_color = settings['background_color']
-
-    window_main_always_on_top = settings['window_main_always_on_top']
-    window_main_width = settings['window_main_width']
+    bg_color = settings['bg_color']
+    bg_img_path = settings['bg_img_path']
+    bg_img_size = settings['bg_img_size']
+    
+    button_bd_color = settings['button_bd_color']
+    button_clicked_bd_color = settings['button_clicked_bd_color']
+    button_move_to_pos = None # obj
+    button_pos_gap = settings['button_pos_gap']
+    button_size_px = settings['button_size_px']
+    buttons_dic = {}
+    
+    py_launcher_settings_window = settings['window_settings']['py_launcher_window_settings']
+    
+    window = None   # obj
     window_main_height = settings['window_main_height']
     window_main_min_width = settings['window_main_min_width']
-
-    window_settings_width = settings['window_settings_width']
+    window_main_width = settings['window_main_width']
     window_settings_height = settings['window_settings_height']
+    window_settings_width = settings['window_settings_width']
 
-    buttons_dic = {}
-    button_size_px = settings['button_size_px']
-    button_pos_gap = settings['button_pos_gap']
-    button_clicked_bd_color = settings['button_clicked_bd_color']
-    py_launcher_settings_window = settings['window_settings']['py_launcher_window_settings']
 
 cv = Data()

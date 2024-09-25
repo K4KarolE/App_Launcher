@@ -1,5 +1,5 @@
 '''
-At the early stage I was thinking using a PyGame and a Tkinter
+At the early stage I was thinking using a PyGame(2.5.2) and a Tkinter
 window to support the app launching window dynamic nature, 
 resizing the window -> the buttons automatically repositioning 
 to a new row, if necessary (PyGame),

@@ -1,6 +1,6 @@
 {
-  "window_main_width": 500,
-  "window_main_height": 200,
+  "window_main_width": 750,
+  "window_main_height": 500,
   "window_main_min_width": 150,
   "window_settings_width": 600,
   "window_settings_height": 400,
@@ -11,10 +11,12 @@
   "bg_img_path": "D:/_DEV/WP3.jpg",
   "button_bd_color": "black",
   "button_clicked_bd_color": "light grey",
-  "button_size_px": 48,
-  "button_pos_gap": 10,
+  "button_size": 40,
+  "button_pos_gap": 20,
   "window_settings": {
     "py_launcher_window_settings": "py",
+    "button_size_sett_win": 40,
+    "button_pos_gap_sett_win": 20,
     "py_launcher_list": {
       "py": "",
       "pyw": "",
@@ -24,16 +26,16 @@
   },
   "buttons": {
     "0": {
-      "title": "",
-      "app_path": "",
-      "app_launcher": "",
-      "icon_path": ""
+      "title": "Code Counter",
+      "app_path": "D:/_DEV/Python/Py_Counter/main.py",
+      "app_launcher": "py -i",
+      "icon_path": "D:/_DEV/Python/QTea_Media_Player/skins/default/queue_blue.png"
     },
     "1": {
       "title": "Video_Downloader",
       "app_path": "D:/_DEV/Python/Video_Downloader/main.py",
       "app_launcher": "py",
-      "icon_path": "D:/_DEV/Python/QTea_Media_Player/skins/default/queue_blue.png"
+      "icon_path": "D:/M.png"
     },
     "2": {
       "title": "",
@@ -42,7 +44,7 @@
       "icon_path": ""
     },
     "3": {
-      "title": "Motion_In_Time",
+      "title": "",
       "app_path": "D:/_DEV/Python/Motion_In_Time/main_pyqt.py",
       "app_launcher": "pyw",
       "icon_path": "D:/_DEV/Python/QTea_Media_Player/skins/default/queue_blue.png"
@@ -54,10 +56,10 @@
       "icon_path": "D:/_DEV/Python/QTea_Media_Player/skins/default/queue_blue.png"
     },
     "5": {
-      "title": "XLSX",
-      "app_path": "D:/Pikk Pakk/Movies_New_Record.xlsx",
-      "app_launcher": "excel",
-      "icon_path": "D:/_DEV/Python/QTea_Media_Player/skins/default/queue_blue.png"
+      "title": "",
+      "app_path": "",
+      "app_launcher": "",
+      "icon_path": ""
     },
     "6": {
       "title": "APh.exe",

@@ -1,39 +1,53 @@
-
 import sys
-import os
 
-from PyQt6.QtCore import QSize, Qt
-from PyQt6.QtGui import QKeySequence, QResizeEvent, QShortcut, QIcon, QFont
 from PyQt6.QtWidgets import (
     QApplication,
-    QFrame,
-    QHBoxLayout,
-    QPushButton,
-    QSplitter,
-    QVBoxLayout,
-    QWidget
+    QWidget,
+    QScrollArea,
+    QMainWindow
     )
 
-from .cons_and_vars import cv, settings
-# from cons_and_vars import cv, settings
+from buttons_settings import MyButtonSettings
+from data import cv, db
 
 
 
-# app = QApplication(sys.argv)
+
+''' APP '''
+app = QApplication(sys.argv)
 
 
-# class MyWindow(QWidget):
-#     def __init__(self):
-#         super().__init__()
-#         self.resize(QSize(cv.window_main_width, cv.window_main_height))
-#         self.setMinimumSize(cv.window_main_min_width, cv.button_size_px + cv.button_pos_gap * 2)
-#         self.setWindowIcon(QIcon('docs/icons/window_icon.png'))
-#         self.setWindowTitle("App Launcher")
-#         if cv.window_main_always_on_top:
-#             self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
-    
+'''
+WINDOW MAIN <-- QSCROLLAREA WINDOW <-- QWIDGET WINDOW <-- QWIDGETS
+'''
 
-# window = MyWindow()
+# MAIN WINDOW
+window_main = QWidget()
+window_main.resize(500, 300)
+window_main.setWindowTitle("Grab & move a button")
 
-# window.show()
-# sys.exit(app.exec())
+
+# QSCROLL AREA WINDOW
+window_scroll_area = QScrollArea(window_main)
+window_scroll_area.setGeometry(50, 50, 400, 100)
+window_scroll_area.setStyleSheet(f"background-color: green;")
+
+# QWIDGET WINDOW
+cv.window_widgets = QMainWindow()
+cv.window_widgets.setStyleSheet(f"background-color: grey;")
+cv.window_widgets.setGeometry(0, 0, cv.window_widgets_width, 80)
+window_scroll_area.setWidget(cv.window_widgets)
+
+
+# WIDGET
+for index, item in enumerate(db['buttons']):
+    pos_x = cv.button_pos_gap + (cv.button_size_sett_win + cv.button_pos_gap_sett_win) * index
+    if db['buttons'][item]['title'] != "":
+        is_button = True
+    else:
+        is_button = False
+    MyButtonSettings(pos_x, is_button)
+
+
+window_main.show()
+sys.exit(app.exec())

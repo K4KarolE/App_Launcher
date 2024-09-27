@@ -2,28 +2,27 @@ import sys
 
 from PyQt6.QtCore import Qt, QSize
 from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import (
-    QApplication,
-    QPushButton,
-    QWidget,
-    QScrollArea,
-    QMainWindow
-    )
+from PyQt6.QtWidgets import QPushButton
 
-button_size = 40
-button_img_size = button_size - 5
+from data import cv
+
+
+button_img_size = cv.button_size - 5
 window_widgets_width = 500
-distance_from_side = 20
-right_side_max_x_pos = window_widgets_width - button_size - distance_from_side
+right_side_max_x_pos = cv.window_widgets_width - cv.button_size_sett_win - cv.button_pos_gap_sett_win
+pos_y = 20
 
 
-class MyButton(QPushButton):
-    def __init__(self, parent):
-        super().__init__(parent=parent)
-        self.setIcon(QIcon("docs/icons/window_icon.png"))
+class MyButtonSettings(QPushButton):
+    def __init__(self, pos_x, is_button):
+        super().__init__(parent=cv.window_widgets)
         self.setIconSize(QSize(button_img_size, button_img_size))
         self.setFlat(True)
+        self.setStyleSheet(f"background-color: white;")
+        self.setGeometry(pos_x, pos_y, cv.button_size_sett_win, cv.button_size_sett_win)
         self.clicked.connect(lambda: self.button_clicked())
+        if is_button:
+            self.setIcon(QIcon("docs/icons/window_icon.png"))
 
     
     def mousePressEvent(self, event):   
@@ -43,8 +42,8 @@ class MyButton(QPushButton):
         new_pos = self.mapFromGlobal(current_pos + pos_diff)
 
         # Keep the button in the frame
-        if new_pos.x() < distance_from_side:
-            new_pos.setX(distance_from_side)
+        if new_pos.x() < cv.button_pos_gap_sett_win:
+            new_pos.setX(cv.button_pos_gap_sett_win)
         if new_pos.x() > right_side_max_x_pos:
             new_pos.setX(right_side_max_x_pos)
 
@@ -63,49 +62,8 @@ class MyButton(QPushButton):
             if moved.manhattanLength() > 3:
                 event.ignore()
                 return
-        return super(MyButton, self).mouseReleaseEvent(event)
+        return super(MyButtonSettings, self).mouseReleaseEvent(event)
 
 
     def button_clicked(self):
         print('Button clicked')
-
-
-
-''' APP '''
-app = QApplication(sys.argv)
-
-
-'''
-WINDOW MAIN <-- QSCROLLAREA WINDOW <-- QWIDGET WINDOW <-- QWIDGETS
-'''
-
-# MAIN WINDOW
-window_main = QWidget()
-window_main.resize(500, 300)
-window_main.setWindowTitle("Grab & move a button")
-
-
-# QSCROLL AREA WINDOW
-window_scroll_area = QScrollArea(window_main)
-window_scroll_area.setGeometry(50, 50, 400, 100)
-window_scroll_area.setStyleSheet(f"background-color: green;")
-
-# QWIDGET WINDOW
-window_widgets = QMainWindow()
-window_widgets.setStyleSheet(f"background-color: grey;")
-window_widgets.setGeometry(0, 0, window_widgets_width, 80)
-window_scroll_area.setWidget(window_widgets)
-
-
-# WIDGET
-def button_clicked():
-    print('Button clicked')
-
-button = MyButton(window_widgets)
-button.setStyleSheet(f"background-color: white;")
-button.setGeometry(20, 20, button_size, button_size)
-button.clicked.connect(button_clicked)
-
-
-window_main.show()
-sys.exit(app.exec())

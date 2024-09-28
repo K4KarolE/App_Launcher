@@ -52,6 +52,8 @@ class Data:
     # WINDOW SETTINGS
     button_size_sett_win: int = db['window_settings']['button_size_sett_win']
     button_pos_gap_sett_win: int = db['window_settings']['button_pos_gap_sett_win']
+    button_size_and_gap_sett_win: int = button_size_sett_win + button_pos_gap_sett_win
+    button_list_sett_win = []   # [ [1, button obj], [2, button obj], ..] / MyButtonSettings class
 
 
 cv = Data()

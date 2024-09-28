@@ -40,13 +40,15 @@ window_scroll_area.setWidget(cv.window_widgets)
 
 
 # WIDGET
+# BUTTONS - window_scroll_area
 for index, item in enumerate(db['buttons']):
-    pos_x = cv.button_pos_gap + (cv.button_size_sett_win + cv.button_pos_gap_sett_win) * index
-    if db['buttons'][item]['title'] != "":
-        is_button = True
-    else:
-        is_button = False
-    MyButtonSettings(pos_x, is_button)
+    MyButtonSettings(
+        index,
+        db['buttons'][item]['title'],
+        db['buttons'][item]['app_path'],
+        db['buttons'][item]['app_launcher'],
+        db['buttons'][item]['icon_path']
+        )
 
 
 window_main.show()

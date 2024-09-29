@@ -22,6 +22,7 @@ class MyButtonSettings(QPushButton):
         self.app_launcher = app_launcher
         self.icon_path = icon_path
         self.new_pos = None
+        self.new_seq_number = self.seq_number
         self.setIconSize(QSize(button_img_size, button_img_size))
         self.setFlat(True)
         self.setStyleSheet(f"background-color: white;")
@@ -32,7 +33,10 @@ class MyButtonSettings(QPushButton):
                 self.setIcon(QIcon(self.icon_path))
             else:
                 self.setIcon(QIcon("docs/icons/default_icon.png"))
-        cv.button_list_sett_win.append([self.seq_number, self])
+        else:
+            self.setText("B")
+        cv.button_list_sett_win.append(self)
+
 
     def mousePressEvent(self, event):   
         self.mouse_press_pos = None
@@ -55,7 +59,6 @@ class MyButtonSettings(QPushButton):
             self.new_pos.setX(cv.button_pos_gap_sett_win)
         if self.new_pos.x() > right_side_max_x_pos:
             self.new_pos.setX(right_side_max_x_pos)
-
         self.move(self.new_pos)
         self.mouse_move_pos = global_pos    
         return super().mouseMoveEvent(event)
@@ -67,6 +70,8 @@ class MyButtonSettings(QPushButton):
             for triggering the button`s clicked signal
         '''
         if self.mouse_move_pos != None:
+            self.move_unselected_buttons()
+            self.move_selected_button()
             moved = event.globalPosition().toPoint() - self.mouse_press_pos
             if moved.manhattanLength() > 3:
                 event.ignore()
@@ -77,14 +82,37 @@ class MyButtonSettings(QPushButton):
     def get_pos_x(self):
         return cv.button_pos_gap + cv.button_size_and_gap_sett_win * self.seq_number
 
-
-    def reposition(self):
-        self.move(self.get_pos_x(), pos_y)
-
     
     def get_seq_number_from_new_pos(self):
+        return round((self.new_pos.x() - cv.button_pos_gap) / cv.button_size_and_gap_sett_win)
+
+
+    def move_unselected_buttons(self):
         if self.new_pos:
-            return round((self.new_pos.x() - cv.button_pos_gap) / cv.button_size_and_gap_sett_win)
+            self.new_seq_number = self.get_seq_number_from_new_pos()
+            
+            if self.new_seq_number < self.seq_number:
+                for button in cv.button_list_sett_win:
+                    if self.new_seq_number <= button.seq_number < self.seq_number:
+                        button.seq_number += 1
+                        button.move(button.get_pos_x(), pos_y)
+            
+            if self.new_seq_number > self.seq_number:
+                for button in cv.button_list_sett_win:
+                    if self.new_seq_number >= button.seq_number > self.seq_number:
+                        button.seq_number -= 1
+                        button.move(button.get_pos_x(), pos_y)
+
+
+    def move_selected_button(self):
+        ''' Called after the rest of the buttons
+            already moved and the self.new_seq_number
+            is generated
+        '''
+        if self.new_pos:
+            self.seq_number = self.new_seq_number
+            self.move(self.get_pos_x(), pos_y)
+            self.new_pos = None
 
 
     def button_clicked(self):

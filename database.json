@@ -44,7 +44,7 @@
       "icon_path": ""
     },
     "3": {
-      "title": "",
+      "title": "QTea",
       "app_path": "D:/_DEV/Python/Motion_In_Time/main_pyqt.py",
       "app_launcher": "pyw",
       "icon_path": "D:/_DEV/Python/QTea_Media_Player/skins/default/queue_blue.png"

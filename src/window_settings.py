@@ -51,5 +51,14 @@ for index, item in enumerate(db['buttons']):
         )
 
 
+
+''' Sort before apply/save '''
+def get_seq_number(e):
+        return e.seq_number
+
+def sort_button_list_after_relocation():
+    cv.button_list_sett_win.sort(key=get_seq_number)
+
+
 window_main.show()
 sys.exit(app.exec())

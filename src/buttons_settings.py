@@ -1,3 +1,15 @@
+'''
+    LEARNED:
+    - At startup widgets will be added to the parent window
+    - Once the app running, the new widget has to be added to
+      the window`s layout, otherwise it will not be visible
+    "
+     new_button = MyButtonSettings(seq_number_new)
+     layout = cv.button_window.layout()
+     layout.addChildWidget(new_button)
+    "
+'''
+
 from pathlib import Path
 
 from PyQt6.QtCore import Qt, QSize
@@ -6,16 +18,19 @@ from PyQt6.QtWidgets import QPushButton
 
 from data import cv
 
-
 button_img_size = cv.button_size - 5
-window_widgets_width = 500
-right_side_max_x_pos = cv.window_widgets_width - cv.button_size_sett_win - cv.button_pos_gap_sett_win
-pos_y = 20
 
 
 class MyButtonSettings(QPushButton):
-    def __init__(self, seq_number, title, app_path, app_launcher, icon_path):
-        super().__init__(parent=cv.window_widgets)
+
+    def __init__(
+            self,
+            seq_number = 0,
+            title = None,
+            app_path = None,
+            app_launcher = None,
+            icon_path = None):
+        super().__init__(parent=cv.button_window)
         self.seq_number = seq_number
         self.title = title
         self.app_path = app_path
@@ -23,22 +38,29 @@ class MyButtonSettings(QPushButton):
         self.icon_path = icon_path
         self.new_pos = None
         self.new_seq_number = self.seq_number
+        self.setParent(cv.button_window)
         self.setIconSize(QSize(button_img_size, button_img_size))
-        self.setFlat(True)
-        self.setStyleSheet(f"background-color: white;")
-        self.setGeometry(self.get_pos_x(), pos_y, cv.button_size_sett_win, cv.button_size_sett_win)
+        self.setGeometry(
+            self.get_pos_x(),
+            cv.button_window_button_pos_y,
+            cv.button_size_sett_win,
+            cv.button_size_sett_win
+            )
         self.clicked.connect(lambda: self.button_clicked())
+        # self.setText(str(self.seq_number))
         if self.icon_path:
             if Path(self.icon_path).exists():
                 self.setIcon(QIcon(self.icon_path))
             else:
                 self.setIcon(QIcon("docs/icons/default_icon.png"))
-        else:
-            self.setText("B")
-        cv.button_list_sett_win.append(self)
+        cv.button_window_button_list.append(self)
+        # Flat >> BG is visible once the button is clicked
+        # self.setFlat(True)
+        self.setStyleSheet("background-color: white;")
+        
 
 
-    def mousePressEvent(self, event):   
+    def mousePressEvent(self, event):
         self.mouse_press_pos = None
         self.mouse_move_pos = None
         if event.button() == Qt.MouseButton.LeftButton:
@@ -55,6 +77,7 @@ class MyButtonSettings(QPushButton):
         self.new_pos = self.mapFromGlobal(current_pos + pos_diff)
 
         # Keep the button in the frame
+        right_side_max_x_pos = cv.button_window_width - cv.button_size_and_gap_sett_win
         if self.new_pos.x() < cv.button_pos_gap_sett_win:
             self.new_pos.setX(cv.button_pos_gap_sett_win)
         if self.new_pos.x() > right_side_max_x_pos:
@@ -65,17 +88,11 @@ class MyButtonSettings(QPushButton):
 
 
     def mouseReleaseEvent(self, event):
-        '''
-            Used to control how much movement needed
-            for triggering the button`s clicked signal
-        '''
-        if self.mouse_move_pos != None:
+        if self.mouse_press_pos != self.mouse_move_pos: # movement, not just click
             self.move_unselected_buttons()
             self.move_selected_button()
-            moved = event.globalPosition().toPoint() - self.mouse_press_pos
-            if moved.manhattanLength() > 3:
-                event.ignore()
-                return
+        cv.selected_button =  self.seq_number
+        # self.set_style_selected_button()
         return super(MyButtonSettings, self).mouseReleaseEvent(event)
 
 
@@ -92,28 +109,47 @@ class MyButtonSettings(QPushButton):
             self.new_seq_number = self.get_seq_number_from_new_pos()
             
             if self.new_seq_number < self.seq_number:
-                for button in cv.button_list_sett_win:
+                for button in cv.button_window_button_list:
                     if self.new_seq_number <= button.seq_number < self.seq_number:
                         button.seq_number += 1
-                        button.move(button.get_pos_x(), pos_y)
+                        button.move(button.get_pos_x(), cv.button_window_button_pos_y)
             
             if self.new_seq_number > self.seq_number:
-                for button in cv.button_list_sett_win:
+                for button in cv.button_window_button_list:
                     if self.new_seq_number >= button.seq_number > self.seq_number:
                         button.seq_number -= 1
-                        button.move(button.get_pos_x(), pos_y)
+                        button.move(button.get_pos_x(), cv.button_window_button_pos_y)
 
 
     def move_selected_button(self):
-        ''' Called after the rest of the buttons
+        ''' 
+            Called after the rest of the buttons
             already moved and the self.new_seq_number
             is generated
         '''
         if self.new_pos:
             self.seq_number = self.new_seq_number
-            self.move(self.get_pos_x(), pos_y)
+            self.move(self.get_pos_x(), cv.button_window_button_pos_y)
             self.new_pos = None
+            self.sort_button_list()
+            print(66)
+    
+
+    def set_style_selected_button(self):
+        for button in cv.button_window_button_list:
+            button.setFlat(True)
+        self.setFlat(False)
+    
 
 
+    def get_seq_number(self, e):
+        return e.seq_number
+
+    def sort_button_list(self):
+        cv.button_window_button_list.sort(key=self.get_seq_number)
+
+
+    
     def button_clicked(self):
+        # self.setText(str(self.seq_number))
         print(self.title)

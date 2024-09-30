@@ -1,19 +1,21 @@
 {
-  "window_main_width": 750,
-  "window_main_height": 500,
-  "window_main_min_width": 150,
-  "window_settings_width": 600,
-  "window_settings_height": 400,
-  "window_settings_active": false,
-  "bg_color": "#DEDEDE",
-  "bg_img_size": 600,
-  "bg_img_path2": "D:/_DEV/WP2.jpg",
-  "bg_img_path": "D:/_DEV/WP3.jpg",
-  "button_bd_color": "black",
-  "button_clicked_bd_color": "light grey",
-  "button_size": 40,
-  "button_pos_gap": 20,
+  "window_main": {
+    "window_width": 750,
+    "window_height": 500,
+    "window_min_width": 150,
+    "bg_color": "#DEDEDE",
+    "bg_img_size": 600,
+    "bg_img_path2": "D:/_DEV/WP2.jpg",
+    "bg_img_path": "D:/_DEV/WP3.jpg",
+    "button_bd_color": "black",
+    "button_clicked_bd_color": "light grey",
+    "button_size": 40,
+    "button_pos_gap": 20
+  },
   "window_settings": {
+    "window_width": 600,
+    "window_height": 500,
+    "window_active": false,
     "py_launcher_window_settings": "py",
     "button_size_sett_win": 40,
     "button_pos_gap_sett_win": 20,
@@ -68,6 +70,18 @@
       "icon_path": "D:/_DEV/Python/QTea_Media_Player/skins/default/queue_blue.png"
     },
     "7": {
+      "title": "QTea_Media_Player",
+      "app_path": "D:/_DEV/Python/QTea_Media_Player/main.py",
+      "app_launcher": "py",
+      "icon_path": "D:/_DEV/Python/QTea_Media_Player/skins/default/queue_blue.png"
+    },
+    "8": {
+      "title": "QTea_Media_Player",
+      "app_path": "D:/_DEV/Python/QTea_Media_Player/main.py",
+      "app_launcher": "py",
+      "icon_path": "D:/_DEV/Python/QTea_Media_Player/skins/default/queue_blue.png"
+    },
+    "9": {
       "title": "QTea_Media_Player",
       "app_path": "D:/_DEV/Python/QTea_Media_Player/main.py",
       "app_launcher": "py",

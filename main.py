@@ -37,7 +37,7 @@ def button_move_to_pos():
             button_pos_y += cv.button_size + cv.button_pos_gap
         cv.buttons_dic[button_number].move(button_pos_x, button_pos_y)
         buttons_counter += 1
-cv.button_move_to_pos = button_move_to_pos
+cv.button_move_to_pos_func = button_move_to_pos
 
 
 # BUTTON CREATION & PLACEMENT

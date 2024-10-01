@@ -62,29 +62,45 @@ for index, item in enumerate(db['buttons']):
 
 
 def remove_button():
-    if cv.selected_button + 1 <=  len(cv.button_window_button_list):
+    if len(cv.button_window_button_list) != 0:
         for button in cv.button_window_button_list:
-            if button.seq_number > cv.selected_button:
+            if button.seq_number > cv.selected_button_index:
                 button.seq_number -= 1
                 button.move(button.get_pos_x(), cv.button_window_button_pos_y)
-        cv.button_window_button_list[cv.selected_button].deleteLater()
-        cv.button_window_button_list.pop(cv.selected_button)
+        cv.button_window_button_list[cv.selected_button_index].deleteLater()
+        cv.button_window_button_list.pop(cv.selected_button_index)
+        
+        if cv.selected_button_index != 0:
+            if cv.selected_button_index + 1 > len(cv.button_window_button_list):
+                cv.selected_button_index -= 1
+        if len(cv.button_window_button_list) > 0:
+            cv.button_window_button_list[cv.selected_button_index].set_style_selected_button()
+        
         resize_button_window()
 
 
+
 def add_new_button():
-    if cv.selected_button == len(cv.button_window_button_list):
-        seq_number_new = len(cv.button_window_button_list) - 1
+    button_list_length = len(cv.button_window_button_list)
+
+    if cv.selected_button_index + 1 == button_list_length:
+        new_button_index = button_list_length
+    elif button_list_length == 0:
+        new_button_index = 0
     else:
-        seq_number_new = cv.selected_button + 1
+        new_button_index = cv.selected_button_index + 1
+
     for button in cv.button_window_button_list:
-        if button.seq_number >= seq_number_new:
+        if button.seq_number >= new_button_index:
             button.seq_number += 1
             button.move(button.get_pos_x(), cv.button_window_button_pos_y)
 
-    new_button = MyButtonSettings(seq_number_new)
+    new_button = MyButtonSettings(new_button_index)
     layout = cv.button_window.layout()
     layout.addChildWidget(new_button)
+
+    if len(cv.button_window_button_list) == 1:
+        cv.button_window_button_list[0].set_style_selected_button()
 
     resize_button_window()
     sort_button_list()

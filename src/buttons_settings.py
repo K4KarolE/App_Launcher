@@ -55,7 +55,7 @@ class MyButtonSettings(QPushButton):
                 self.setIcon(QIcon("docs/icons/default_icon.png"))
         cv.button_window_button_list.append(self)
         # Flat >> BG is visible once the button is clicked
-        # self.setFlat(True)
+        self.setFlat(True)
         self.setStyleSheet("background-color: white;")
         
 
@@ -91,8 +91,8 @@ class MyButtonSettings(QPushButton):
         if self.mouse_press_pos != self.mouse_move_pos: # movement, not just click
             self.move_unselected_buttons()
             self.move_selected_button()
-        cv.selected_button =  self.seq_number
-        # self.set_style_selected_button()
+        cv.selected_button_index =  self.seq_number
+        self.set_style_selected_button()
         return super(MyButtonSettings, self).mouseReleaseEvent(event)
 
 
@@ -132,14 +132,12 @@ class MyButtonSettings(QPushButton):
             self.move(self.get_pos_x(), cv.button_window_button_pos_y)
             self.new_pos = None
             self.sort_button_list()
-            print(66)
     
 
     def set_style_selected_button(self):
         for button in cv.button_window_button_list:
             button.setFlat(True)
-        self.setFlat(False)
-    
+        self.setFlat(False)    
 
 
     def get_seq_number(self, e):

@@ -20,7 +20,7 @@ class MyButton(QPushButton):
             self.setToolTipDuration(1500)
             self.setFont(QFont('Times', 9, 600))
             self.setIcon(QIcon(self.button['icon_path']))
-            button_icon_diff = 12
+            button_icon_diff = 5
             self.setIconSize(QSize(cv.button_size-button_icon_diff, cv.button_size-button_icon_diff))
             self.set_style_playlist_buttons()
             self.clicked.connect(self.button_clicked_action)

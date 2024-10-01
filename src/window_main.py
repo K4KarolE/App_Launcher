@@ -16,5 +16,5 @@ class MyWindow(QWidget):
     def resizeEvent(self, a0: QResizeEvent):
         if cv.window_main_width != self.width():
             cv.window_main_width = self.width()
-            cv.button_move_to_pos()
+            cv.button_move_to_pos_func()
         return super().resizeEvent(a0)

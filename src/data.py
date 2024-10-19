@@ -45,6 +45,7 @@ class Data:
      
     
     # WINDOW SETTINGS
+    window_settings_main: object = None  
     window_settings_height: int = db['window_settings']['window_height']
     window_settings_width: int = db['window_settings']['window_width']
     window_settings_active: bool = db['window_settings']['window_active']
@@ -61,6 +62,16 @@ class Data:
     button_window_scroll_area_height: int = 100
     button_window_height: int = button_window_scroll_area_height - 20
     button_window_button_pos_y = 20
+
+    BG_COLOR_WIN_SETT: str = db['window_settings']['bg_color_win_sett']
+    FIELD_BG_COLOR: str = db['window_settings']['field_bg_color']
+    TEXT_FIELD_FONT_STYLE: str = db['window_settings']['text_field_font_style']
+    TEXT_FIELD_FONT_SIZE: int = db['window_settings']['text_field_font_size']
+    TEXT_FIELD_FONT_COLOR: str = db['window_settings']['text_field_font_color']
+    TEXT_FIELDS_DIC = {
+        'title': object,
+        'app_path': object
+    }
 
 
 

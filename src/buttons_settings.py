@@ -149,5 +149,4 @@ class MyButtonSettings(QPushButton):
 
     
     def button_clicked(self):
-        # self.setText(str(self.seq_number))
-        print(self.title)
+        cv.TEXT_FIELDS_DIC['title'].setText(self.title)

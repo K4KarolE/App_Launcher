@@ -19,6 +19,11 @@
     "py_launcher_window_settings": "py",
     "button_size_sett_win": 40,
     "button_pos_gap_sett_win": 20,
+    "bg_color_win_sett": "#272822",
+    "field_bg_color": "#272822",
+    "text_field_font_style": "Candara",
+    "text_field_font_size": 13,
+    "text_field_font_color": "white",
     "py_launcher_list": {
       "py": "",
       "pyw": "",

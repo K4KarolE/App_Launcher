@@ -5,11 +5,12 @@ from PyQt6.QtWidgets import (
     QApplication,
     QWidget,
     QScrollArea,
-    QMainWindow,
-    QPushButton
+    QMainWindow
     )
 
 from buttons_settings import MyButtonSettings
+from window_settings_text_field import MyTextLine
+from window_settings_button import MyBaseButtonSettings
 from data import cv, db
 
 
@@ -24,28 +25,28 @@ WINDOW MAIN <-- QSCROLLAREA WINDOW <-- QWIDGET WINDOW <-- QWIDGETS
 '''
 
 # MAIN WINDOW
-window_main = QWidget()
-window_main.resize(cv.window_settings_width, cv.window_settings_height)
-window_main.setWindowTitle("Settings")
-window_main.setStyleSheet(f"background-color: #555555;")
-window_main.setWindowIcon(QIcon('docs/icons/settings_main_img.png'))
+cv.window_settings_main = QWidget()
+cv.window_settings_main.resize(cv.window_settings_width, cv.window_settings_height)
+cv.window_settings_main.setWindowTitle("Settings")
+cv.window_settings_main.setStyleSheet(f"background-color: {cv.BG_COLOR_WIN_SETT};")
+cv.window_settings_main.setWindowIcon(QIcon('docs/icons/settings_main_img.png'))
 
 
 # QSCROLL AREA WINDOW
 BASE_X = 20
 button_window_scroll_area_width = cv.window_settings_width - BASE_X*2
-button_window_scroll_area = QScrollArea(window_main)
+button_window_scroll_area = QScrollArea(cv.window_settings_main)
 button_window_scroll_area.setGeometry(
                                     20,
                                     30,
                                     button_window_scroll_area_width,
                                     cv.button_window_scroll_area_height
                                     )
-button_window_scroll_area.setStyleSheet(f"background-color: #454545;")
+button_window_scroll_area.setStyleSheet(f"background-color: {cv.BG_COLOR_WIN_SETT};")
 
 # QWIDGET WINDOW
 cv.button_window = QMainWindow()
-cv.button_window.setStyleSheet("background-color: #454545;")
+cv.button_window.setStyleSheet(f"background-color: {cv.BG_COLOR_WIN_SETT};")
 cv.button_window.setGeometry(0, 0, cv.button_window_width, cv.button_window_height)
 button_window_scroll_area.setWidget(cv.button_window)
 
@@ -118,16 +119,12 @@ def resize_button_window():
 
 
 
+button_add = MyBaseButtonSettings("Add", BASE_X, 150, add_new_button)
+
+button_remove = MyBaseButtonSettings("Remove", BASE_X + 120, 150, remove_button)
 
 
-aa = QPushButton(window_main, text="Add")
-aa.setGeometry(100, 200, 100, 30)
-aa.clicked.connect(lambda: add_new_button())
-
-
-bb = QPushButton(window_main, text="Remove")
-bb.setGeometry(100, 260, 100, 30)
-bb.clicked.connect(lambda: remove_button())
+text_line_title = MyTextLine("title", BASE_X, 200)
 
 
 
@@ -152,5 +149,5 @@ def sort_button_list():
     cv.button_window_button_list.sort(key=get_seq_number)
 
 
-window_main.show()
+cv.window_settings_main.show()
 sys.exit(app.exec())

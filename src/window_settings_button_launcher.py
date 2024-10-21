@@ -1,4 +1,7 @@
-'''
+''' 
+    Used in the settings window / launcher button selection area
+
+
     LEARNED:
     - At startup widgets will be added to the parent window
     - Once the app running, the new widget has to be added to
@@ -18,10 +21,9 @@ from PyQt6.QtWidgets import QPushButton
 
 from data import cv
 
-button_img_size = cv.button_size - 5
 
 
-class MyButtonSettings(QPushButton):
+class MyLButtonSettings(QPushButton):
 
     def __init__(
             self,
@@ -39,12 +41,12 @@ class MyButtonSettings(QPushButton):
         self.new_pos = None
         self.new_seq_number = self.seq_number
         self.setParent(cv.button_window)
-        self.setIconSize(QSize(button_img_size, button_img_size))
+        self.setIconSize(QSize(cv.BUTTON_SIZE_SETT_WIN, cv.BUTTON_SIZE_SETT_WIN))
         self.setGeometry(
             self.get_pos_x(),
-            cv.button_window_button_pos_y,
-            cv.button_size_sett_win,
-            cv.button_size_sett_win
+            cv.BUTTON_WINDOW_BUTTON_POS_Y,
+            cv.BUTTON_SIZE_SETT_WIN,
+            cv.BUTTON_SIZE_SETT_WIN
             )
         self.clicked.connect(lambda: self.button_clicked())
         # self.setText(str(self.seq_number))
@@ -77,9 +79,9 @@ class MyButtonSettings(QPushButton):
         self.new_pos = self.mapFromGlobal(current_pos + pos_diff)
 
         # Keep the button in the frame
-        right_side_max_x_pos = cv.button_window_width - cv.button_size_and_gap_sett_win
-        if self.new_pos.x() < cv.button_pos_gap_sett_win:
-            self.new_pos.setX(cv.button_pos_gap_sett_win)
+        right_side_max_x_pos = cv.button_window_width - cv.BUTTON_SIZE_AND_GAP_SETT_WIN
+        if self.new_pos.x() < cv.BUTTON_POS_GAP_SETT_WIN:
+            self.new_pos.setX(cv.BUTTON_POS_GAP_SETT_WIN)
         if self.new_pos.x() > right_side_max_x_pos:
             self.new_pos.setX(right_side_max_x_pos)
         self.move(self.new_pos)
@@ -93,15 +95,15 @@ class MyButtonSettings(QPushButton):
             self.move_selected_button()
         cv.selected_button_index =  self.seq_number
         self.set_style_selected_button()
-        return super(MyButtonSettings, self).mouseReleaseEvent(event)
+        return super(MyLButtonSettings, self).mouseReleaseEvent(event)
 
 
     def get_pos_x(self):
-        return cv.button_pos_gap + cv.button_size_and_gap_sett_win * self.seq_number
+        return cv.button_pos_gap + cv.BUTTON_SIZE_AND_GAP_SETT_WIN * self.seq_number
 
     
     def get_seq_number_from_new_pos(self):
-        return round((self.new_pos.x() - cv.button_pos_gap) / cv.button_size_and_gap_sett_win)
+        return round((self.new_pos.x() - cv.button_pos_gap) / cv.BUTTON_SIZE_AND_GAP_SETT_WIN)
 
 
     def move_unselected_buttons(self):
@@ -112,13 +114,13 @@ class MyButtonSettings(QPushButton):
                 for button in cv.button_window_button_list:
                     if self.new_seq_number <= button.seq_number < self.seq_number:
                         button.seq_number += 1
-                        button.move(button.get_pos_x(), cv.button_window_button_pos_y)
+                        button.move(button.get_pos_x(), cv.BUTTON_WINDOW_BUTTON_POS_Y)
             
             if self.new_seq_number > self.seq_number:
                 for button in cv.button_window_button_list:
                     if self.new_seq_number >= button.seq_number > self.seq_number:
                         button.seq_number -= 1
-                        button.move(button.get_pos_x(), cv.button_window_button_pos_y)
+                        button.move(button.get_pos_x(), cv.BUTTON_WINDOW_BUTTON_POS_Y)
 
 
     def move_selected_button(self):
@@ -129,7 +131,7 @@ class MyButtonSettings(QPushButton):
         '''
         if self.new_pos:
             self.seq_number = self.new_seq_number
-            self.move(self.get_pos_x(), cv.button_window_button_pos_y)
+            self.move(self.get_pos_x(), cv.BUTTON_WINDOW_BUTTON_POS_Y)
             self.new_pos = None
             self.sort_button_list()
     

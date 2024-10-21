@@ -8,7 +8,7 @@ from PyQt6.QtWidgets import QPushButton
 from .data import cv, db, WORKING_DIRECTORY
 
 
-class MyButton(QPushButton):
+class MyLButton(QPushButton):
     def __init__(self, button_number):
         super().__init__()
         self.setParent(cv.window)
@@ -20,8 +20,8 @@ class MyButton(QPushButton):
             self.setToolTipDuration(1500)
             self.setFont(QFont('Times', 9, 600))
             self.setIcon(QIcon(self.button['icon_path']))
-            button_icon_diff = 5
-            self.setIconSize(QSize(cv.button_size-button_icon_diff, cv.button_size-button_icon_diff))
+            BUTTON_ICON_DIFF = 5
+            self.setIconSize(QSize(cv.button_size-BUTTON_ICON_DIFF, cv.button_size-BUTTON_ICON_DIFF))
             self.set_style_playlist_buttons()
             self.clicked.connect(self.button_clicked_action)
     

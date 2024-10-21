@@ -8,9 +8,9 @@ from PyQt6.QtWidgets import (
     QMainWindow
     )
 
-from buttons_settings import MyButtonSettings
-from window_settings_text_field import MyTextLine
 from window_settings_button import MyBaseButtonSettings
+from window_settings_button_launcher import MyLButtonSettings
+from window_settings_text_field import MyTextLine
 from data import cv, db
 
 
@@ -26,7 +26,7 @@ WINDOW MAIN <-- QSCROLLAREA WINDOW <-- QWIDGET WINDOW <-- QWIDGETS
 
 # MAIN WINDOW
 cv.window_settings_main = QWidget()
-cv.window_settings_main.resize(cv.window_settings_width, cv.window_settings_height)
+cv.window_settings_main.resize(cv.WINDOW_SETTINGS_WIDTH, cv.WINDOW_SETTINGS_HEIGHT)
 cv.window_settings_main.setWindowTitle("Settings")
 cv.window_settings_main.setStyleSheet(f"background-color: {cv.BG_COLOR_WIN_SETT};")
 cv.window_settings_main.setWindowIcon(QIcon('docs/icons/settings_main_img.png'))
@@ -34,26 +34,26 @@ cv.window_settings_main.setWindowIcon(QIcon('docs/icons/settings_main_img.png'))
 
 # QSCROLL AREA WINDOW
 BASE_X = 20
-button_window_scroll_area_width = cv.window_settings_width - BASE_X*2
+button_window_scroll_area_width = cv.WINDOW_SETTINGS_WIDTH - BASE_X*2
 button_window_scroll_area = QScrollArea(cv.window_settings_main)
 button_window_scroll_area.setGeometry(
                                     20,
                                     30,
                                     button_window_scroll_area_width,
-                                    cv.button_window_scroll_area_height
+                                    cv.BUTTON_WINDOW_SCROLL_AREA_HEIGHT
                                     )
 button_window_scroll_area.setStyleSheet(f"background-color: {cv.BG_COLOR_WIN_SETT};")
 
 # QWIDGET WINDOW
 cv.button_window = QMainWindow()
 cv.button_window.setStyleSheet(f"background-color: {cv.BG_COLOR_WIN_SETT};")
-cv.button_window.setGeometry(0, 0, cv.button_window_width, cv.button_window_height)
+cv.button_window.setGeometry(0, 0, cv.button_window_width, cv.BUTTON_WINDOW_HEIGHT)
 button_window_scroll_area.setWidget(cv.button_window)
 
 # WIDGET
 # BUTTONS - window_scroll_area
 for index, item in enumerate(db['buttons']):
-    MyButtonSettings(
+    MyLButtonSettings(
         index,
         db['buttons'][item]['title'],
         db['buttons'][item]['app_path'],
@@ -67,7 +67,7 @@ def remove_button():
         for button in cv.button_window_button_list:
             if button.seq_number > cv.selected_button_index:
                 button.seq_number -= 1
-                button.move(button.get_pos_x(), cv.button_window_button_pos_y)
+                button.move(button.get_pos_x(), cv.BUTTON_WINDOW_BUTTON_POS_Y)
         cv.button_window_button_list[cv.selected_button_index].deleteLater()
         cv.button_window_button_list.pop(cv.selected_button_index)
         
@@ -94,9 +94,9 @@ def add_new_button():
     for button in cv.button_window_button_list:
         if button.seq_number >= new_button_index:
             button.seq_number += 1
-            button.move(button.get_pos_x(), cv.button_window_button_pos_y)
+            button.move(button.get_pos_x(), cv.BUTTON_WINDOW_BUTTON_POS_Y)
 
-    new_button = MyButtonSettings(new_button_index)
+    new_button = MyLButtonSettings(new_button_index)
     layout = cv.button_window.layout()
     layout.addChildWidget(new_button)
 
@@ -109,13 +109,13 @@ def add_new_button():
 
 def resize_button_window():
     cv.button_window_width = (
-        cv.button_pos_gap_sett_win
-        + cv.button_size_and_gap_sett_win
+        cv.BUTTON_POS_GAP_SETT_WIN
+        + cv.BUTTON_SIZE_AND_GAP_SETT_WIN
         * len(cv.button_window_button_list)
         )
     if cv.button_window_width < button_window_scroll_area_width:
         cv.button_window_width = button_window_scroll_area_width
-    cv.button_window.resize(cv.button_window_width, cv.button_window_height)
+    cv.button_window.resize(cv.button_window_width, cv.BUTTON_WINDOW_HEIGHT)
 
 
 

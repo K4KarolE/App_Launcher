@@ -6,7 +6,7 @@ from PyQt6.QtWidgets import (
 
 from src import (
     MyImage,
-    MyButton,
+    MyLButton,
     MyWindow,
     cv,
     db
@@ -42,7 +42,7 @@ cv.button_move_to_pos_func = button_move_to_pos
 
 # BUTTON CREATION & PLACEMENT
 for button_number in db['buttons']:
-    cv.buttons_dic[button_number] = MyButton(button_number)
+    cv.buttons_dic[button_number] = MyLButton(button_number)
     if db['buttons'][button_number]['title']:
         button_move_to_pos()
     else:

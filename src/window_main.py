@@ -9,7 +9,7 @@ class MyWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.resize(QSize(cv.window_main_width, cv.window_main_height))
-        self.setMinimumSize(cv.window_main_min_width, cv.button_size + cv.button_pos_gap * 2)
+        self.setMinimumSize(cv.WINDOW_MAIN_MIN_WIDTH, cv.button_size + cv.button_pos_gap * 2)
         self.setWindowIcon(QIcon('docs/icons/window_icon.png'))
         self.setWindowTitle("App Launcher")
     
